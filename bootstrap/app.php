@@ -13,8 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-       $middleware->statefulApi();
-
+        // statefulApi() retiré — plus nécessaire avec l'auth par token
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
