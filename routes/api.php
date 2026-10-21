@@ -69,6 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/classes/{classe}/bulletins/valider', [BulletinController::class, 'valider']);
     Route::get('/bulletins/{bulletin}/telecharger', [BulletinController::class, 'telecharger']);
 
+    Route::post('/eleves/{eleve}/photo', [EleveController::class, 'uploadPhoto']);
+    Route::get('/eleves/{eleve}/photo', [EleveController::class, 'photo']);
+    Route::get('/eleves/{eleve}/carte-scolaire', [EleveController::class, 'carteScolaire']);
+
 
 
     //Directeur

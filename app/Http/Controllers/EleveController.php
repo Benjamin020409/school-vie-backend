@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Eleve;
 use App\Models\Tuteur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EleveController extends Controller
 {
@@ -85,7 +86,6 @@ class EleveController extends Controller
 
             if ($tuteurData) {
                 $eleve->tuteur()->update($tuteurData);
-                // si l'email vient d'être renseigné ici, on tente aussi la création du compte
                 $eleve->tuteur->fresh()->creerCompteUtilisateurSiBesoin();
             }
         }
@@ -104,5 +104,49 @@ class EleveController extends Controller
         ]);
 
         return $pdf->download("fiche-inscription-{$eleve->matricule}.pdf");
+    }
+
+    public function uploadPhoto(Request $request, Eleve $eleve)
+    {
+        $request->validate([
+            'photo' => ['required', 'image', 'max:5120'],
+        ]);
+
+        if ($eleve->photo_path && Storage::disk('local')->exists($eleve->photo_path)) {
+            Storage::disk('local')->delete($eleve->photo_path);
+        }
+
+        $chemin = $request->file('photo')->store("photos/{$eleve->id}", 'local');
+        $eleve->update(['photo_path' => $chemin]);
+
+        return response()->json(['photo_path' => $chemin], 201);
+    }
+
+    public function photo(Eleve $eleve)
+    {
+        abort_if(! $eleve->photo_path || ! Storage::disk('local')->exists($eleve->photo_path), 404, "Aucune photo pour cet élève.");
+
+        return Storage::disk('local')->response($eleve->photo_path);
+    }
+
+    public function carteScolaire(Eleve $eleve)
+    {
+        $eleve->load(['inscriptions.classe.niveau', 'inscriptions.anneeScolaire']);
+        $inscription = $eleve->inscriptions->sortByDesc('date_inscription')->first();
+
+        $photoBase64 = null;
+        if ($eleve->photo_path && Storage::disk('local')->exists($eleve->photo_path)) {
+            $contenu = Storage::disk('local')->get($eleve->photo_path);
+            $mime = Storage::disk('local')->mimeType($eleve->photo_path);
+            $photoBase64 = "data:{$mime};base64,".base64_encode($contenu);
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.carte-scolaire', [
+            'eleve' => $eleve,
+            'inscription' => $inscription,
+            'photoBase64' => $photoBase64,
+        ])->setPaper([0, 0, 242.7, 153.1], 'portrait');
+
+        return $pdf->download("carte-scolaire-{$eleve->matricule}.pdf");
     }
 }

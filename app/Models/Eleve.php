@@ -10,7 +10,7 @@ class Eleve extends Model
 {
     protected $fillable = [
         'matricule', 'nom', 'prenom', 'date_naissance',
-        'lieu_naissance', 'sexe', 'tuteur_id', 'user_id',
+        'lieu_naissance', 'sexe','photo_path', 'tuteur_id', 'user_id',
     ];
 
     protected function casts(): array

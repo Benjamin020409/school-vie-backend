@@ -16,6 +16,14 @@
     </style>
 </head>
 <body>
+
+@php
+        $logoPath = public_path('assets/logo.png');
+        $logoSrc = file_exists($logoPath)
+            ? 'data:'.mime_content_type($logoPath).';base64,'.base64_encode(file_get_contents($logoPath))
+            : null;
+    @endphp
+
     <h1>SCHOOL VIE</h1>
     <div class="sous-titre">Liste des élèves</div>
     <div class="info">

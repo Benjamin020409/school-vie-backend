@@ -36,6 +36,11 @@
             vertical-align: middle;
         }
 
+        .logo {
+            height: 48px;
+            width: auto;
+        }
+
         .badge {
             width: 34px;
             height: 34px;
@@ -200,12 +205,25 @@
     </style>
 </head>
 <body>
+    @php
+        $logoPath = public_path('assets/logo.png');
+        $logoSrc = file_exists($logoPath)
+            ? 'data:'.mime_content_type($logoPath).';base64,'.base64_encode(file_get_contents($logoPath))
+            : null;
+    @endphp
+
     <div class="bande-haut"></div>
 
     <div class="contenu">
         <table class="entete-etablissement">
             <tr>
-                <td style="width: 40px;"><div class="badge">SV</div></td>
+                <td style="width: 60px;">
+                    @if ($logoSrc)
+                        <img src="{{ $logoSrc }}" class="logo" alt="Logo">
+                    @else
+                        <div class="badge">SV</div>
+                    @endif
+                </td>
                 <td>
                     <div class="nom-etablissement">SCHOOL VIE</div>
                     <div class="tagline-etablissement">GESTION SCOLAIRE</div>

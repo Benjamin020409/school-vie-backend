@@ -19,7 +19,8 @@ return [
 
 'allowed_methods' => ['*'],
 
-'allowed_origins' => ['https://school-vie-sigma.vercel.app'],
+'allowed_origins' => ['http://localhost:5173',
+    'https://school-vie-sigma.vercel.app',],
 
 'allowed_origins_patterns' => [],
 
