@@ -18,6 +18,10 @@ use App\Http\Controllers\BulletinController;
 use App\Http\Controllers\FraisScolariteController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\CarteScolaireController;
+use App\Http\Controllers\RapportController;
+use App\Http\Controllers\ListePaiementController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -73,6 +77,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/eleves/{eleve}/photo', [EleveController::class, 'photo']);
     Route::get('/eleves/{eleve}/carte-scolaire', [EleveController::class, 'carteScolaire']);
 
+    Route::get('/classes/{classe}/cartes/verification', [CarteScolaireController::class, 'verification']);
+    Route::get('/classes/{classe}/cartes/pdf', [CarteScolaireController::class, 'pdf']);
+
 
 
     //Directeur
@@ -82,6 +89,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/enseignants/{enseignant}/affectations', [EnseignantController::class, 'syncAffectations']);
     Route::get('/frais-scolarite', [FraisScolariteController::class, 'index']);
     Route::post('/niveaux/{niveau}/frais-scolarite', [FraisScolariteController::class, 'definir']);
+
+
+    Route::get('/utilisateurs', [UtilisateurController::class, 'index']);
+    Route::post('/utilisateurs', [UtilisateurController::class, 'store']);
+    Route::put('/utilisateurs/{user}/reinitialiser-mot-de-passe', [UtilisateurController::class, 'reinitialiserMotDePasse']);
+    Route::delete('/utilisateurs/{user}', [UtilisateurController::class, 'destroy']);
 
 
     //Enseignant
@@ -107,6 +120,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/paiements', [PaiementController::class, 'store']);
     Route::get('/classes/{classe}/tableau-paiements', [PaiementController::class, 'tableau']);
     Route::get('/paiements/{paiement}/recu', [PaiementController::class, 'recuPdf']);
+    Route::get('/comptable/rapport-financier', [RapportController::class, 'financier']);
+    Route::get('/comptable/rapport-financier/pdf', [RapportController::class, 'financierPdf']);
+    Route::get('/paiements/{paiement}/justificatif', [PaiementController::class, 'justificatif']);
+    Route::get('/classes/{classe}/tranches', [ListePaiementController::class, 'tranchesClasse']);
+    Route::get('/classes/{classe}/liste-paiements/pdf', [ListePaiementController::class, 'listePaiements']);
+    Route::get('/classes/{classe}/liste-renvoi/pdf', [ListePaiementController::class, 'listeRenvoi']);
 
 
 

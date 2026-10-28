@@ -38,7 +38,9 @@
             <tr><td class="label">Élève</td><td>{{ $paiement->eleve->prenom }} {{ $paiement->eleve->nom }}</td></tr>
             <tr><td class="label">Matricule</td><td>{{ $paiement->eleve->matricule }}</td></tr>
             <tr><td class="label">Classe</td><td>{{ $classe?->nom }} ({{ $classe?->niveau?->nom }})</td></tr>
+            <tr><td class="label">Année scolaire</td><td>{{ $annee?->libelle ?? '—' }}</td></tr>
             <tr><td class="label">Mode de paiement</td>
+            <tr><td class="label">Moyen de paiement</td><td>{{ $paiement->moyen_paiement === 'banque' ? 'Banque' : 'Espèces' }}</td></tr>
                 <td>
                     {{ $paiement->mode_paiement === 'bloc' ? 'En bloc' : 'Par tranche' }}
                     @if ($paiement->type_tranche)
